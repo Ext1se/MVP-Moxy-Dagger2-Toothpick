@@ -7,6 +7,7 @@ import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.common.BasePresenter;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
+import com.elegion.test.behancer.ui.profile.ProfileView;
 import com.elegion.test.behancer.utils.ApiUtils;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ public class ProjectsPresenter extends BasePresenter {
     private Storage mStorage;
     private BehanceApi mApi;
     private ProjectsView mView;
+    private boolean mIsLoadedData;
 
     @Inject
     public ProjectsPresenter(Storage storage, BehanceApi api) {
@@ -29,6 +31,10 @@ public class ProjectsPresenter extends BasePresenter {
 
     public void setView(ProjectsView view) {
         mView = view;
+        if (!mIsLoadedData) {
+            mIsLoadedData = true;
+            getProjects();
+        }
     }
 
     public void getProjects() {

@@ -22,8 +22,8 @@ public abstract class PresenterFragment<P extends BasePresenter> extends Fragmen
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         injectDependencies();
     }
 

@@ -90,8 +90,6 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mProjectsAdapter);
-
-        onRefreshData();
     }
 
     @Override

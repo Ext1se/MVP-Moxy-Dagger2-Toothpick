@@ -3,6 +3,7 @@ package com.elegion.test.behancer.ui.profile;
 import com.elegion.test.behancer.common.BasePresenter;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
+import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.utils.ApiUtils;
 
 import javax.inject.Inject;
@@ -15,6 +16,8 @@ public class ProfilePresenter extends BasePresenter {
     private Storage mStorage;
     private BehanceApi mApi;
     private ProfileView mView;
+    private User mUser;
+    private boolean mIsLoadedData = false;
 
     @Inject
     public ProfilePresenter(Storage storage, BehanceApi api) {
@@ -22,8 +25,18 @@ public class ProfilePresenter extends BasePresenter {
         mApi = api;
     }
 
-    public void setView(ProfileView view) {
+    public void setView(ProfileView view, String username) {
         mView = view;
+        if (!mIsLoadedData) {
+            mIsLoadedData = true;
+            getProfile(username);
+        } else {
+            if (mUser != null) {
+                view.showProfile(mUser);
+            } else {
+                getProfile(username);
+            }
+        }
     }
 
     public void getProfile(String username) {
@@ -47,7 +60,10 @@ public class ProfilePresenter extends BasePresenter {
                     mView.showMessage(mNetworkConnection);
                 })
                 .subscribe(
-                        response -> mView.showProfile(response.getUser()),
+                        response -> {
+                            mUser = response.getUser();
+                            mView.showProfile(mUser);
+                        },
                         throwable -> mView.showError()));
     }
 }

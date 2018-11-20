@@ -64,7 +64,7 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     @Inject
     @Override
     public void setDependencies() {
-        mPresenter.setView(this);
+        mPresenter.setView(this, mUsername);
     }
 
     @Nullable
@@ -93,7 +93,6 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
         }
 
         mProfileView.setVisibility(View.VISIBLE);
-        onRefreshData();
     }
 
     @Override
