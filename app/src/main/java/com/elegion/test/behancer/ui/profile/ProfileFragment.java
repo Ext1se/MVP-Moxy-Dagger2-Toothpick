@@ -18,6 +18,7 @@ import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.di.module.ProfileFragmentModule;
 import com.elegion.test.behancer.utils.DateUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -29,10 +30,8 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
-    private RefreshOwner mRefreshOwner;
     private View mErrorView;
     private View mProfileView;
-    private String mUsername;
 
     private ImageView mProfileImage;
     private TextView mProfileName;
@@ -40,7 +39,12 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     private TextView mProfileLocation;
 
     @Inject
+    RefreshOwner mRefreshOwner;
+    @Inject
     ProfilePresenter mPresenter;
+    @Inject
+    @Named(PROFILE_KEY)
+    String mUsername;
 
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
@@ -51,13 +55,16 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     @Override
     protected void injectDependencies() {
-        AppDelegate.getAppComponent().inject(this);
+        AppDelegate
+                .getAppComponent()
+                .plusProfileFragment(new ProfileFragmentModule(this))
+                .inject(this);
     }
 
+    @Inject
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mRefreshOwner = context instanceof RefreshOwner ? (RefreshOwner) context : null;
+    public void setDependencies() {
+
     }
 
     @Nullable
@@ -81,15 +88,10 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getArguments() != null) {
-            mUsername = getArguments().getString(PROFILE_KEY);
-        }
-
         if (getActivity() != null) {
             getActivity().setTitle(mUsername);
         }
 
-        mPresenter.setView(this);
         mProfileView.setVisibility(View.VISIBLE);
         onRefreshData();
     }

@@ -1,5 +1,6 @@
 package com.elegion.test.behancer.ui.projects;
 
+import android.support.annotation.Keep;
 import android.view.View;
 
 import com.elegion.test.behancer.BuildConfig;
@@ -16,19 +17,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProjectsPresenter extends BasePresenter {
 
-    private ProjectsView mView;
-
     @Inject
     Storage mStorage;
     @Inject
     BehanceApi mApi;
+    @Inject
+    ProjectsView mView;
 
     @Inject
     public ProjectsPresenter() {
-    }
-
-    public void setView(ProjectsView view) {
-        mView = view;
     }
 
     public void getProjects() {

@@ -18,6 +18,8 @@ import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.data.model.project.Project;
+import com.elegion.test.behancer.di.module.ProfileFragmentModule;
+import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.ui.profile.ProfileActivity;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
 import com.elegion.test.behancer.utils.ApiUtils;
@@ -38,12 +40,12 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
         implements ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
 
     private RecyclerView mRecyclerView;
-    private RefreshOwner mRefreshOwner;
     private View mErrorView;
 
     @Inject
+    RefreshOwner mRefreshOwner;
+    @Inject
     ProjectsAdapter mProjectsAdapter;
-
     @Inject
     ProjectsPresenter mPresenter;
 
@@ -52,16 +54,17 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof RefreshOwner) {
-            mRefreshOwner = ((RefreshOwner) context);
-        }
+    protected void injectDependencies() {
+        AppDelegate
+                .getAppComponent()
+                .plusProjectsFragment(new ProjectsFragmentModule(this))
+                .inject(this);
     }
 
+    @Inject
     @Override
-    protected void injectDependencies() {
-        AppDelegate.getAppComponent().inject(this);
+    public void setDependencies() {
+        mProjectsAdapter.setOnItemClickListener(this);
     }
 
     @Nullable
@@ -84,9 +87,6 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
             getActivity().setTitle(R.string.projects);
         }
 
-        mPresenter.setView(this);
-        //mProjectsAdapter = new ProjectsAdapter();
-        mProjectsAdapter.setOnItemClickListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mProjectsAdapter);
 

@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.di.component.AppComponent;
 
+import javax.inject.Inject;
+
 public abstract class PresenterFragment<P extends BasePresenter> extends Fragment {
 
     protected abstract P getPresenter();
@@ -26,4 +28,6 @@ public abstract class PresenterFragment<P extends BasePresenter> extends Fragmen
     }
 
     protected abstract void injectDependencies();
+
+    public abstract void setDependencies();
 }
