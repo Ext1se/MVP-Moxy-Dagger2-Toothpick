@@ -2,6 +2,7 @@ package com.elegion.test.behancer.ui.profile;
 
 import android.support.v4.app.Fragment;
 
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.common.SingleFragmentActivity;
 
 public class ProfileActivity extends SingleFragmentActivity {
@@ -23,7 +24,7 @@ public class ProfileActivity extends SingleFragmentActivity {
 
     @Override
     protected void releaseDependencies() {
-
+        AppDelegate.releaseProfileSingletonComponent();
     }
 }
 

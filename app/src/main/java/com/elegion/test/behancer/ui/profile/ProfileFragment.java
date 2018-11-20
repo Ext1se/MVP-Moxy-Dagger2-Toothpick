@@ -56,7 +56,7 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     @Override
     protected void injectDependencies() {
         AppDelegate
-                .getAppComponent()
+                .getProfileSingletonComponent()
                 .plusProfileFragment(new ProfileFragmentModule(this))
                 .inject(this);
     }
@@ -64,7 +64,7 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
     @Inject
     @Override
     public void setDependencies() {
-
+        mPresenter.setView(this);
     }
 
     @Nullable

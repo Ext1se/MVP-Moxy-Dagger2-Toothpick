@@ -12,15 +12,18 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProfilePresenter extends BasePresenter {
 
-    @Inject
-    Storage mStorage;
-    @Inject
-    BehanceApi mApi;
-    @Inject
-    ProfileView mView;
+    private Storage mStorage;
+    private BehanceApi mApi;
+    private ProfileView mView;
 
     @Inject
-    public ProfilePresenter() {
+    public ProfilePresenter(Storage storage, BehanceApi api) {
+        mStorage = storage;
+        mApi = api;
+    }
+
+    public void setView(ProfileView view) {
+        mView = view;
     }
 
     public void getProfile(String username) {

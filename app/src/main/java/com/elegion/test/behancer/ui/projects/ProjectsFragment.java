@@ -56,7 +56,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
     @Override
     protected void injectDependencies() {
         AppDelegate
-                .getAppComponent()
+                .getProjectsSingletonComponent()
                 .plusProjectsFragment(new ProjectsFragmentModule(this))
                 .inject(this);
     }
@@ -65,6 +65,7 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
     @Override
     public void setDependencies() {
         mProjectsAdapter.setOnItemClickListener(this);
+        mPresenter.setView(this);
     }
 
     @Nullable
