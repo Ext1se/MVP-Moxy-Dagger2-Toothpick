@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.R;
@@ -36,7 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
+public class ProjectsFragment extends PresenterFragment
         implements ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
 
     private RecyclerView mRecyclerView;
@@ -47,7 +49,13 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
     @Inject
     ProjectsAdapter mProjectsAdapter;
     @Inject
+    @InjectPresenter
     ProjectsPresenter mPresenter;
+
+    @ProvidePresenter
+    ProjectsPresenter providePresenter() {
+        return mPresenter;
+    }
 
     public static ProjectsFragment newInstance() {
         return new ProjectsFragment();
@@ -89,8 +97,6 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mProjectsAdapter);
-
-        onRefreshData();
     }
 
     @Override

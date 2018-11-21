@@ -1,8 +1,7 @@
 package com.elegion.test.behancer.ui.projects;
 
-import android.support.annotation.Keep;
-import android.view.View;
-
+import com.arellomobile.mvp.InjectViewState;
+import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.common.BasePresenter;
 import com.elegion.test.behancer.data.Storage;
@@ -15,18 +14,25 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ProjectsPresenter extends BasePresenter {
+@InjectViewState
+public class ProjectsPresenter extends BasePresenter<ProjectsView> {
 
     @Inject
     Storage mStorage;
     @Inject
     BehanceApi mApi;
-    @Inject
-    ProjectsView mView;
 
     @Inject
-    public ProjectsPresenter() {
+    public ProjectsPresenter(Storage storage, BehanceApi api) {
+        mStorage = storage;
+        mApi = api;
+        getProjects();
     }
+
+/*    public ProjectsPresenter() {
+        AppDelegate.getAppComponent().inject(this);
+        getProjects();
+    }*/
 
     public void getProjects() {
         mCompositeDisposable.add(mApi.getProjects(BuildConfig.API_QUERY)
@@ -44,17 +50,17 @@ public class ProjectsPresenter extends BasePresenter {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mView.showRefresh())
+                .doOnSubscribe(disposable -> getViewState().showRefresh())
                 .doFinally(() -> {
-                    mView.hideRefresh();
-                    mView.showMessage(mNetworkConnection);
+                    getViewState().hideRefresh();
+                    getViewState().showMessage(mNetworkConnection);
                 })
                 .subscribe(
-                        response -> mView.showProjects(response.getProjects()),
-                        throwable -> mView.showError()));
+                        response -> getViewState().showProjects(response.getProjects()),
+                        throwable -> getViewState().showError()));
     }
 
     public void openProfileFragment(String username) {
-        mView.openProfileFragment(username);
+        getViewState().openProfileFragment(username);
     }
 }

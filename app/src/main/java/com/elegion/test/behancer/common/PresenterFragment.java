@@ -4,14 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.di.component.AppComponent;
 
 import javax.inject.Inject;
 
-public abstract class PresenterFragment<P extends BasePresenter> extends Fragment {
+public abstract class PresenterFragment extends MvpAppCompatFragment {
 
-    protected abstract P getPresenter();
+    protected abstract BasePresenter getPresenter();
 
     @Override
     public void onDetach() {
@@ -21,10 +22,16 @@ public abstract class PresenterFragment<P extends BasePresenter> extends Fragmen
         super.onDetach();
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+/*    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         injectDependencies();
+    }*/
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        injectDependencies();
+        super.onCreate(savedInstanceState);
     }
 
     protected abstract void injectDependencies();

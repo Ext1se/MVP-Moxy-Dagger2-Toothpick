@@ -26,7 +26,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class ProfileFragment extends PresenterFragment<ProfilePresenter> implements ProfileView, Refreshable {
+public class ProfileFragment extends PresenterFragment implements ProfileView, Refreshable {
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
