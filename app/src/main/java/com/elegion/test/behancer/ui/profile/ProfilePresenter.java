@@ -17,7 +17,6 @@ public class ProfilePresenter extends BasePresenter {
     private BehanceApi mApi;
     private ProfileView mView;
     private User mUser;
-    private boolean mIsLoadedData = false;
 
     @Inject
     public ProfilePresenter(Storage storage, BehanceApi api) {
@@ -27,15 +26,10 @@ public class ProfilePresenter extends BasePresenter {
 
     public void setView(ProfileView view, String username) {
         mView = view;
-        if (!mIsLoadedData) {
-            mIsLoadedData = true;
-            getProfile(username);
+        if (mUser != null) {
+            view.showProfile(mUser);
         } else {
-            if (mUser != null) {
-                view.showProfile(mUser);
-            } else {
-                getProfile(username);
-            }
+            getProfile(username);
         }
     }
 
