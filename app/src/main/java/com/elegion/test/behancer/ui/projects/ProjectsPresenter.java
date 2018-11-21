@@ -22,20 +22,14 @@ public class ProjectsPresenter extends BasePresenter<ProjectsView> {
     @Inject
     BehanceApi mApi;
 
-    @Inject
-    public ProjectsPresenter(Storage storage, BehanceApi api) {
-        mStorage = storage;
-        mApi = api;
+    public ProjectsPresenter() {
+        AppDelegate.getAppComponent().inject(this);
         getProjects();
     }
 
-/*    public ProjectsPresenter() {
-        AppDelegate.getAppComponent().inject(this);
-        getProjects();
-    }*/
-
     public void getProjects() {
-        mCompositeDisposable.add(mApi.getProjects(BuildConfig.API_QUERY)
+        mCompositeDisposable.add(
+                mApi.getProjects(BuildConfig.API_QUERY)
                 .doOnSuccess(response -> {
                     mNetworkConnection = true;
                     mStorage.insertProjects(response);

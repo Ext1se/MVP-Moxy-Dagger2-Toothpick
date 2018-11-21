@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
@@ -40,16 +42,24 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
 
     @Inject
     RefreshOwner mRefreshOwner;
-    @Inject
+    @InjectPresenter
     ProfilePresenter mPresenter;
     @Inject
     @Named(PROFILE_KEY)
     String mUsername;
 
+    @ProvidePresenter
+    ProfilePresenter providePresenter() {
+        /*
+        Запрос происходит в методе onCreate, поэтому нужно согласовывать
+        со вставкой зависимостей. Метод inject() вызовать до вызова этого метода.
+         */
+        return new ProfilePresenter(mUsername);
+    }
+
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -64,7 +74,6 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
     @Inject
     @Override
     public void setDependencies() {
-
     }
 
     @Nullable
@@ -93,7 +102,6 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
         }
 
         mProfileView.setVisibility(View.VISIBLE);
-        onRefreshData();
     }
 
     @Override

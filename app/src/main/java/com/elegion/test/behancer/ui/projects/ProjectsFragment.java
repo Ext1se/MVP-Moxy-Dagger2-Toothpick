@@ -1,11 +1,9 @@
 package com.elegion.test.behancer.ui.projects;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,27 +14,18 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.AppDelegate;
-import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.data.model.project.Project;
-import com.elegion.test.behancer.di.module.ProfileFragmentModule;
 import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.ui.profile.ProfileActivity;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
-import com.elegion.test.behancer.utils.ApiUtils;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
-import com.elegion.test.behancer.data.Storage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class ProjectsFragment extends PresenterFragment
         implements ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
@@ -48,13 +37,12 @@ public class ProjectsFragment extends PresenterFragment
     RefreshOwner mRefreshOwner;
     @Inject
     ProjectsAdapter mProjectsAdapter;
-    @Inject
     @InjectPresenter
     ProjectsPresenter mPresenter;
 
     @ProvidePresenter
     ProjectsPresenter providePresenter() {
-        return mPresenter;
+        return new ProjectsPresenter();
     }
 
     public static ProjectsFragment newInstance() {

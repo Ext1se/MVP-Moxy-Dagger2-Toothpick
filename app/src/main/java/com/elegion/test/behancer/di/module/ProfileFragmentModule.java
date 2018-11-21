@@ -20,12 +20,6 @@ public class ProfileFragmentModule extends FragmentViewModule {
 
     @FragmentScope
     @Provides
-    ProfileView provideProfileView() {
-        return (ProfileView) mFragment;
-    }
-
-    @FragmentScope
-    @Provides
     @Named(PROFILE_KEY)
     String provideOwnerName() {
         if (mFragment.getArguments() != null) {

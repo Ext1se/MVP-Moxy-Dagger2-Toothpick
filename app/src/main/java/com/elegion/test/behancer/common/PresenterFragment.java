@@ -1,5 +1,6 @@
 package com.elegion.test.behancer.common;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,16 +23,10 @@ public abstract class PresenterFragment extends MvpAppCompatFragment {
         super.onDetach();
     }
 
-/*    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        injectDependencies();
-    }*/
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
         injectDependencies();
-        super.onCreate(savedInstanceState);
     }
 
     protected abstract void injectDependencies();

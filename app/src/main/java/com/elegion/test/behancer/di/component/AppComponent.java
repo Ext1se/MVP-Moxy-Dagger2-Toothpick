@@ -5,6 +5,7 @@ import com.elegion.test.behancer.di.module.NetworkModule;
 import com.elegion.test.behancer.di.module.ProfileFragmentModule;
 import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
+import com.elegion.test.behancer.ui.profile.ProfilePresenter;
 import com.elegion.test.behancer.ui.projects.ProjectsFragment;
 import com.elegion.test.behancer.ui.projects.ProjectsPresenter;
 
@@ -19,4 +20,5 @@ public interface AppComponent {
     ProjectsFragmentSubComponent plusProjectsFragment(ProjectsFragmentModule module);
 
     void inject(ProjectsPresenter presenter);
+    void inject(ProfilePresenter presenter);
 }

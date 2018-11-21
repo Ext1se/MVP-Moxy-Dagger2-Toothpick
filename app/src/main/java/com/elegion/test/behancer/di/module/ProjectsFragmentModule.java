@@ -17,10 +17,4 @@ public class ProjectsFragmentModule extends FragmentViewModule {
     public ProjectsFragmentModule(ProjectsFragment fragment) {
         super(fragment);
     }
-
-    @FragmentScope
-    @Provides
-    ProjectsPresenter provideProjectsPresenter(Storage storage, BehanceApi api) {
-        return new ProjectsPresenter(storage, api);
-    }
 }
