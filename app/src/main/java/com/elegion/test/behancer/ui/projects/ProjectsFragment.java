@@ -42,6 +42,10 @@ public class ProjectsFragment extends PresenterFragment
 
     @ProvidePresenter
     ProjectsPresenter providePresenter() {
+        /*
+        Запрос происходит в методе onCreate, поэтому нужно согласовывать
+        со вставкой зависимостей. Метод inject() вызовать до вызова этого метода.
+         */
         return new ProjectsPresenter();
     }
 

@@ -1,8 +1,12 @@
 package com.elegion.test.behancer.di.module;
 
+import com.elegion.test.behancer.data.Storage;
+import com.elegion.test.behancer.data.api.BehanceApi;
 import com.elegion.test.behancer.di.scope.FragmentScope;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
+import com.elegion.test.behancer.ui.profile.ProfilePresenter;
 import com.elegion.test.behancer.ui.profile.ProfileView;
+import com.elegion.test.behancer.ui.projects.ProjectsPresenter;
 
 import javax.inject.Named;
 
@@ -26,5 +30,11 @@ public class ProfileFragmentModule extends FragmentViewModule {
             return mFragment.getArguments().getString(PROFILE_KEY);
         }
         return null;
+    }
+
+    @FragmentScope
+    @Provides
+    ProfilePresenter provideProfilePresenter(Storage storage, BehanceApi behanceApi) {
+        return new ProfilePresenter(storage, behanceApi);
     }
 }

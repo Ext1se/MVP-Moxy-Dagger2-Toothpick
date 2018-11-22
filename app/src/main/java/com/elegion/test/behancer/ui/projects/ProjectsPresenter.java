@@ -14,6 +14,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+/*
+    Интересное наблюдение:
+    Вызов метода (например, getProjects), который взаимодействует с нашей View, из конструктора опасен тем,
+    что компоненты View могут быть еще не проинициализированы.
+    Поэтому без использования Moxy нужно быть аккуратным с вызовом конструктора.
+    Сопоставлять жизненные циклы наших зависимостей и фрагмента.
+    НО!
+    В случаи с Moxy. С этим можно не беспокоиться. Все действия, которые совершаем с View,
+    выполнятся тогда, когда будет создана View со всеми ее компонентами. Скорее всего
+    как минимум после onActivityCreated согласно дебаггингу.
+*/
+
 @InjectViewState
 public class ProjectsPresenter extends BasePresenter<ProjectsView> {
 

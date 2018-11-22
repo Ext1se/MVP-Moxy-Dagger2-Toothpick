@@ -42,6 +42,7 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
 
     @Inject
     RefreshOwner mRefreshOwner;
+    @Inject
     @InjectPresenter
     ProfilePresenter mPresenter;
     @Inject
@@ -50,11 +51,7 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
 
     @ProvidePresenter
     ProfilePresenter providePresenter() {
-        /*
-        Запрос происходит в методе onCreate, поэтому нужно согласовывать
-        со вставкой зависимостей. Метод inject() вызовать до вызова этого метода.
-         */
-        return new ProfilePresenter(mUsername);
+        return mPresenter;
     }
 
     public static ProfileFragment newInstance(Bundle args) {
@@ -102,6 +99,9 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
         }
 
         mProfileView.setVisibility(View.VISIBLE);
+        if (savedInstanceState == null) {
+            onRefreshData();
+        }
     }
 
     @Override
