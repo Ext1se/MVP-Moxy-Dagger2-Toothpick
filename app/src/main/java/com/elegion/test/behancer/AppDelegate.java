@@ -2,27 +2,44 @@ package com.elegion.test.behancer;
 
 import android.app.Application;
 
-import com.elegion.test.behancer.di.component.AppComponent;
 import com.elegion.test.behancer.di.module.AppModule;
-import com.elegion.test.behancer.di.component.DaggerAppComponent;
 import com.elegion.test.behancer.di.module.NetworkModule;
 import com.elegion.test.behancer.helper_picasso.PicassoHelper;
 
+import toothpick.Scope;
+import toothpick.Toothpick;
+import toothpick.configuration.Configuration;
+import toothpick.registries.FactoryRegistry;
+import toothpick.registries.FactoryRegistryLocator;
+import toothpick.registries.MemberInjectorRegistry;
+import toothpick.registries.MemberInjectorRegistryLocator;
+import toothpick.smoothie.module.SmoothieApplicationModule;
+
 public class AppDelegate extends Application {
 
-    private static AppComponent sAppComponent;
+    private static Scope sAppScope;
 
     @Override
     public void onCreate() {
         super.onCreate();
         PicassoHelper.createPicasso(this);
-        sAppComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .networkModule(new NetworkModule())
-                .build();
+
+        Configuration configuration;
+        if (BuildConfig.DEBUG) {
+            configuration = Configuration.forDevelopment().preventMultipleRootScopes();
+        } else {
+            configuration = Configuration.forProduction().disableReflection();
+        }
+        Toothpick.setConfiguration(configuration);
+        //MemberInjectorRegistryLocator.setRootRegistry(new com.elegion.test.behancer.MemberInjectorRegistry());
+        //FactoryRegistryLocator.setRootRegistry(new com.elegion.test.behancer.FactoryRegistry());
+
+        //sAppScope = Toothpick.openScope(AppDelegate.class);
+        sAppScope = Toothpick.openScope("AppScope");
+        sAppScope.installModules(new SmoothieApplicationModule(this), new AppModule(this), new NetworkModule());
     }
 
-    public static AppComponent getAppComponent() {
-        return sAppComponent;
+    public static Scope getAppScope() {
+        return sAppScope;
     }
 }

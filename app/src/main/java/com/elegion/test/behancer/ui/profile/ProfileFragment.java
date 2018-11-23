@@ -19,12 +19,16 @@ import com.elegion.test.behancer.common.Refreshable;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
 import com.elegion.test.behancer.di.module.ProfileFragmentModule;
+import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.utils.DateUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import toothpick.Scope;
+import toothpick.Toothpick;
 
 public class ProfileFragment extends PresenterFragment<ProfilePresenter> implements ProfileView, Refreshable {
 
@@ -55,10 +59,14 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     @Override
     protected void injectDependencies() {
-        AppDelegate
-                .getAppComponent()
-                .plusProfileFragment(new ProfileFragmentModule(this))
-                .inject(this);
+        Scope scope = Toothpick.openScopes("AppScope", "ProfileFragmentScope");
+        scope.installModules(new ProfileFragmentModule(this));
+        Toothpick.inject(this, scope);
+    }
+
+    @Override
+    protected void clearDependencies() {
+        Toothpick.closeScope("ProfileFragmentScope");
     }
 
     @Inject

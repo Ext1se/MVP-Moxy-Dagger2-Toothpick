@@ -2,22 +2,17 @@ package com.elegion.test.behancer.di.module;
 
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.common.RefreshOwner;
-import com.elegion.test.behancer.di.scope.FragmentScope;
+import toothpick.config.Module;
 
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public abstract class FragmentViewModule {
+public class FragmentViewModule extends Module {
 
     protected PresenterFragment mFragment;
 
     public FragmentViewModule(PresenterFragment fragment) {
         mFragment = fragment;
+        bind(RefreshOwner.class).toInstance(provideOwner());
     }
 
-    @Provides
-    @FragmentScope
     RefreshOwner provideOwner() {
         if (mFragment.getContext() instanceof RefreshOwner) {
             return (RefreshOwner) mFragment.getContext();

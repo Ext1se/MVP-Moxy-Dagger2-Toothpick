@@ -35,6 +35,8 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import toothpick.Scope;
+import toothpick.Toothpick;
 
 public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
         implements ProjectsView, Refreshable, ProjectsAdapter.OnItemClickListener {
@@ -55,10 +57,14 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
 
     @Override
     protected void injectDependencies() {
-        AppDelegate
-                .getAppComponent()
-                .plusProjectsFragment(new ProjectsFragmentModule(this))
-                .inject(this);
+        Scope scope = Toothpick.openScopes("AppScope", "ProjectsFragmentScope");
+        scope.installModules(new ProjectsFragmentModule(this));
+        Toothpick.inject(this, scope);
+    }
+
+    @Override
+    protected void clearDependencies() {
+        Toothpick.closeScope("ProjectsFragmentScope");
     }
 
     @Inject

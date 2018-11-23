@@ -7,26 +7,31 @@ import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import toothpick.config.Module;
 
-@Module
-public class NetworkModule {
+public class NetworkModule extends Module{
 
-    @Provides
-    @Singleton
-    Gson provideGson() {
+    private final Gson mGson = provideGson();
+    private final OkHttpClient mOkHttpClient = provideClient();
+    private final Retrofit mRetrofit = provideRetrofit();
+
+    public NetworkModule() {
+        bind(Gson.class).toInstance(mGson);
+        bind(OkHttpClient.class).toInstance(mOkHttpClient);
+        bind(Retrofit.class).toInstance(mRetrofit);
+        bind(BehanceApi.class).toInstance(provideApiService());
+    }
+
+    public Gson provideGson() {
         return new Gson();
     }
 
-    @Provides
-    @Singleton
-    OkHttpClient provideClient() {
+    public OkHttpClient provideClient() {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         builder.addInterceptor(new ApiKeyInterceptor());
         if (!BuildConfig.BUILD_TYPE.contains("release")) {
@@ -35,20 +40,17 @@ public class NetworkModule {
         return builder.build();
     }
 
-    @Provides
-    @Singleton
-    Retrofit provideRetrofit(OkHttpClient client, Gson gson) {
+    public Retrofit provideRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(mOkHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(mGson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 
-    @Provides
-    @Singleton
-    BehanceApi provideApiService(Retrofit retrofit) {
-            return retrofit.create(BehanceApi.class);
+    BehanceApi provideApiService() {
+            return mRetrofit.create(BehanceApi.class);
     }
+
 }

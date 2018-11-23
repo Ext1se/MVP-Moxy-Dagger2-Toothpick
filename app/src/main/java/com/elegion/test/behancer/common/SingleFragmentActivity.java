@@ -6,11 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-
-import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
-import com.elegion.test.behancer.data.Storage;
-import com.elegion.test.behancer.di.component.AppComponent;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, RefreshOwner {
