@@ -9,12 +9,7 @@ public class ProfileFragmentModule extends FragmentViewModule {
 
     public ProfileFragmentModule(ProfileFragment fragment) {
         super(fragment);
-        bind(ProfileView.class).toInstance(provideProfileView());
         bind(String.class).withName(PROFILE_KEY).toInstance(provideOwnerName());
-    }
-
-    ProfileView provideProfileView() {
-        return (ProfileView) mFragment;
     }
 
     String provideOwnerName() {

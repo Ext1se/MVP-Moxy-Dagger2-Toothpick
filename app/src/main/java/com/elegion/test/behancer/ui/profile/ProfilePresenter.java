@@ -1,5 +1,6 @@
 package com.elegion.test.behancer.ui.profile;
 
+import com.arellomobile.mvp.InjectViewState;
 import com.elegion.test.behancer.common.BasePresenter;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.api.BehanceApi;
@@ -10,17 +11,24 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ProfilePresenter extends BasePresenter {
+@InjectViewState
+public class ProfilePresenter extends BasePresenter<ProfileView> {
+
+    private Storage mStorage;
+    private BehanceApi mApi;
+    private boolean mIsFirstAttach = false;
 
     @Inject
-    Storage mStorage;
-    @Inject
-    BehanceApi mApi;
-    @Inject
-    ProfileView mView;
+    public ProfilePresenter(Storage storage, BehanceApi api) {
+        mStorage = storage;
+        mApi = api;
+    }
 
-    @Inject
-    public ProfilePresenter() {
+    public void firstAttach(String username) {
+        if (!mIsFirstAttach) {
+            getProfile(username);
+            mIsFirstAttach = true;
+        }
     }
 
     public void getProfile(String username) {
@@ -38,13 +46,13 @@ public class ProfilePresenter extends BasePresenter {
                     return null;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> mView.showRefresh())
+                .doOnSubscribe(disposable -> getViewState().showRefresh())
                 .doFinally(() -> {
-                    mView.hideRefresh();
-                    mView.showMessage(mNetworkConnection);
+                    getViewState().hideRefresh();
+                    getViewState().showMessage(mNetworkConnection);
                 })
                 .subscribe(
-                        response -> mView.showProfile(response.getUser()),
-                        throwable -> mView.showError()));
+                        response -> getViewState().showProfile(response.getUser()),
+                        throwable -> getViewState().showError()));
     }
 }

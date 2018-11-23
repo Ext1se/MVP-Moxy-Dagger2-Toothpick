@@ -1,11 +1,14 @@
 package com.elegion.test.behancer.common;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public abstract class PresenterFragment<P extends BasePresenter> extends Fragment {
+import com.arellomobile.mvp.MvpAppCompatFragment;
 
-    protected abstract P getPresenter();
+public abstract class PresenterFragment extends MvpAppCompatFragment {
+
+    protected abstract BasePresenter getPresenter();
 
     @Override
     public void onDetach() {
@@ -16,8 +19,8 @@ public abstract class PresenterFragment<P extends BasePresenter> extends Fragmen
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         injectDependencies();
     }
 

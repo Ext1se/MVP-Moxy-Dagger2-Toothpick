@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
@@ -18,7 +20,9 @@ import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
 import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.di.ScopesName;
 import com.elegion.test.behancer.di.module.ProfileFragmentModule;
+import com.elegion.test.behancer.di.module.ProfilePresenterModule;
 import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.utils.DateUtils;
 import com.squareup.picasso.Callback;
@@ -30,7 +34,7 @@ import javax.inject.Named;
 import toothpick.Scope;
 import toothpick.Toothpick;
 
-public class ProfileFragment extends PresenterFragment<ProfilePresenter> implements ProfileView, Refreshable {
+public class ProfileFragment extends PresenterFragment implements ProfileView, Refreshable {
 
     public static final String PROFILE_KEY = "PROFILE_KEY";
 
@@ -44,11 +48,21 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     @Inject
     RefreshOwner mRefreshOwner;
-    @Inject
+    @InjectPresenter
     ProfilePresenter mPresenter;
     @Inject
     @Named(PROFILE_KEY)
     String mUsername;
+
+    @ProvidePresenter
+    ProfilePresenter providePresenter()
+    {
+        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROFILE_PRESENTER_SCOPE);
+        scope.installModules(new ProfilePresenterModule());
+        mPresenter = scope.getInstance(ProfilePresenter.class);
+        Toothpick.closeScope(ScopesName.PROFILE_PRESENTER_SCOPE);
+        return mPresenter;
+    }
 
     public static ProfileFragment newInstance(Bundle args) {
         ProfileFragment fragment = new ProfileFragment();
@@ -59,14 +73,14 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     @Override
     protected void injectDependencies() {
-        Scope scope = Toothpick.openScopes("AppScope", "ProfileFragmentScope");
+        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROFILE_FRAGMENT_SCOPE);
         scope.installModules(new ProfileFragmentModule(this));
         Toothpick.inject(this, scope);
     }
 
     @Override
     protected void clearDependencies() {
-        Toothpick.closeScope("ProfileFragmentScope");
+        Toothpick.closeScope(ScopesName.PROFILE_FRAGMENT_SCOPE);
     }
 
     @Inject
@@ -101,7 +115,7 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
         }
 
         mProfileView.setVisibility(View.VISIBLE);
-        onRefreshData();
+        mPresenter.firstAttach(mUsername);
     }
 
     @Override
