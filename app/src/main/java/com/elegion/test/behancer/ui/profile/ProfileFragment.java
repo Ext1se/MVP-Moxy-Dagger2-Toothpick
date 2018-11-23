@@ -1,6 +1,5 @@
 package com.elegion.test.behancer.ui.profile;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,19 +12,15 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
-import com.elegion.test.behancer.AppDelegate;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
-import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
-import com.elegion.test.behancer.di.ScopesName;
+import com.elegion.test.behancer.di.DI;
 import com.elegion.test.behancer.di.module.ProfileFragmentModule;
 import com.elegion.test.behancer.di.module.ProfilePresenterModule;
-import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.utils.DateUtils;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -57,10 +52,10 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
     @ProvidePresenter
     ProfilePresenter providePresenter()
     {
-        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROFILE_PRESENTER_SCOPE);
+        Scope scope = Toothpick.openScopes(DI.APP_SCOPE, DI.PROFILE_PRESENTER_SCOPE);
         scope.installModules(new ProfilePresenterModule());
         mPresenter = scope.getInstance(ProfilePresenter.class);
-        Toothpick.closeScope(ScopesName.PROFILE_PRESENTER_SCOPE);
+        Toothpick.closeScope(DI.PROFILE_PRESENTER_SCOPE);
         return mPresenter;
     }
 
@@ -73,14 +68,14 @@ public class ProfileFragment extends PresenterFragment implements ProfileView, R
 
     @Override
     protected void injectDependencies() {
-        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROFILE_FRAGMENT_SCOPE);
+        Scope scope = Toothpick.openScopes(DI.APP_SCOPE, DI.PROFILE_FRAGMENT_SCOPE);
         scope.installModules(new ProfileFragmentModule(this));
         Toothpick.inject(this, scope);
     }
 
     @Override
     protected void clearDependencies() {
-        Toothpick.closeScope(ScopesName.PROFILE_FRAGMENT_SCOPE);
+        Toothpick.closeScope(DI.PROFILE_FRAGMENT_SCOPE);
     }
 
     @Inject

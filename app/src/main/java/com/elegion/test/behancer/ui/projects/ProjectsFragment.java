@@ -16,7 +16,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.data.model.project.Project;
-import com.elegion.test.behancer.di.ScopesName;
+import com.elegion.test.behancer.di.DI;
 import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.di.module.ProjectsPresenterModule;
 import com.elegion.test.behancer.ui.profile.ProfileActivity;
@@ -46,10 +46,10 @@ public class ProjectsFragment extends PresenterFragment
 
     @ProvidePresenter
     ProjectsPresenter providePresenter() {
-        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROJECTS_PRESENTER_SCOPE);
+        Scope scope = Toothpick.openScopes(DI.APP_SCOPE, DI.PROJECTS_PRESENTER_SCOPE);
         scope.installModules(new ProjectsPresenterModule());
         mPresenter = scope.getInstance(ProjectsPresenter.class);
-        Toothpick.closeScope(ScopesName.PROJECTS_PRESENTER_SCOPE);
+        Toothpick.closeScope(DI.PROJECTS_PRESENTER_SCOPE);
         return mPresenter;
     }
 
@@ -59,7 +59,7 @@ public class ProjectsFragment extends PresenterFragment
 
     @Override
     protected void injectDependencies() {
-        Scope scope = Toothpick.openScopes(ScopesName.APP_SCOPE, ScopesName.PROJECTS_FRAGMENT_SCOPE);
+        Scope scope = Toothpick.openScopes(DI.APP_SCOPE, DI.PROJECTS_FRAGMENT_SCOPE);
         scope.installModules(new ProjectsFragmentModule(this));
         Toothpick.inject(this, scope);
     }

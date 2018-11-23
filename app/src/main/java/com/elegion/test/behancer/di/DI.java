@@ -1,6 +1,6 @@
 package com.elegion.test.behancer.di;
 
-public class ScopesName {
+public class DI {
     public static final String APP_SCOPE = "AppScope";
     public static final String PROJECTS_FRAGMENT_SCOPE = "ProjectsFragmentScope";
     public static final String PROFILE_FRAGMENT_SCOPE = "ProfileFragmentScope";
