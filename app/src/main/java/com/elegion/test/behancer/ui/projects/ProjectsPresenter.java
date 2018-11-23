@@ -17,15 +17,20 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProjectsPresenter extends BasePresenter {
 
-    @Inject
-    Storage mStorage;
-    @Inject
-    BehanceApi mApi;
-    @Inject
-    ProjectsView mView;
+    private Storage mStorage;
+    private BehanceApi mApi;
+    private ProjectsView mView;
 
     @Inject
-    public ProjectsPresenter() {
+    public ProjectsPresenter(Storage storage, BehanceApi api, ProjectsView view) {
+        mStorage = storage;
+        mApi = api;
+        mView = view;
+        getProjects();
+    }
+
+    public void setView(ProjectsView view) {
+        mView = view;
     }
 
     public void getProjects() {

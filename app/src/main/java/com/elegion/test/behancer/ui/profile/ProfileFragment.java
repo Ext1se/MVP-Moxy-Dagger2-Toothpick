@@ -1,6 +1,5 @@
 package com.elegion.test.behancer.ui.profile;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,12 +15,10 @@ import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
-import com.elegion.test.behancer.data.Storage;
 import com.elegion.test.behancer.data.model.user.User;
+import com.elegion.test.behancer.di.ScopesName;
 import com.elegion.test.behancer.di.module.ProfileFragmentModule;
-import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.utils.DateUtils;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -59,20 +56,25 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
 
     @Override
     protected void injectDependencies() {
-        Scope scope = Toothpick.openScopes("AppScope", "ProfileFragmentScope");
+        AppDelegate.createSingletonProfileFragmentScope(this);
+        Scope scope = Toothpick.openScopes(ScopesName.SINGLETON_PROFILE_FRAGMENT_SCOPE, ScopesName.PROFILE_FRAGMENT_SCOPE);
         scope.installModules(new ProfileFragmentModule(this));
         Toothpick.inject(this, scope);
     }
 
     @Override
     protected void clearDependencies() {
-        Toothpick.closeScope("ProfileFragmentScope");
+        if (getActivity().isFinishing()) {
+            AppDelegate.clearSingletonProfileFragmentScope();
+        } else {
+            Toothpick.closeScope("ProfileFragmentScope");
+        }
     }
 
     @Inject
     @Override
     public void setDependencies() {
-
+        mPresenter.setView(this);
     }
 
     @Nullable
@@ -101,7 +103,6 @@ public class ProfileFragment extends PresenterFragment<ProfilePresenter> impleme
         }
 
         mProfileView.setVisibility(View.VISIBLE);
-        onRefreshData();
     }
 
     @Override

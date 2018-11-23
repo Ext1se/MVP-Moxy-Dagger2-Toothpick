@@ -1,11 +1,9 @@
 package com.elegion.test.behancer.ui.projects;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,27 +12,20 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.elegion.test.behancer.AppDelegate;
-import com.elegion.test.behancer.BuildConfig;
 import com.elegion.test.behancer.R;
 import com.elegion.test.behancer.common.PresenterFragment;
 import com.elegion.test.behancer.data.model.project.Project;
-import com.elegion.test.behancer.di.module.ProfileFragmentModule;
+import com.elegion.test.behancer.di.ScopesName;
 import com.elegion.test.behancer.di.module.ProjectsFragmentModule;
 import com.elegion.test.behancer.ui.profile.ProfileActivity;
 import com.elegion.test.behancer.ui.profile.ProfileFragment;
-import com.elegion.test.behancer.utils.ApiUtils;
 import com.elegion.test.behancer.common.RefreshOwner;
 import com.elegion.test.behancer.common.Refreshable;
-import com.elegion.test.behancer.data.Storage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import toothpick.Scope;
 import toothpick.Toothpick;
 
@@ -57,20 +48,26 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
 
     @Override
     protected void injectDependencies() {
-        Scope scope = Toothpick.openScopes("AppScope", "ProjectsFragmentScope");
+        AppDelegate.createSingletonProjectsFragmentScope(this);
+        Scope scope = Toothpick.openScopes(ScopesName.SINGLETON_PROJECTS_FRAGMENT_SCOPE, ScopesName.PROJECTS_FRAGMENT_SCOPE);
         scope.installModules(new ProjectsFragmentModule(this));
         Toothpick.inject(this, scope);
     }
 
     @Override
     protected void clearDependencies() {
-        Toothpick.closeScope("ProjectsFragmentScope");
+        if (getActivity().isFinishing()) {
+            AppDelegate.clearSingletonProjectsFragmentScope();
+        } else {
+            Toothpick.closeScope("ProjectsFragmentScope");
+        }
     }
 
     @Inject
     @Override
     public void setDependencies() {
         mProjectsAdapter.setOnItemClickListener(this);
+        mPresenter.setView(this);
     }
 
     @Nullable
@@ -95,8 +92,6 @@ public class ProjectsFragment extends PresenterFragment<ProjectsPresenter>
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mProjectsAdapter);
-
-        onRefreshData();
     }
 
     @Override
