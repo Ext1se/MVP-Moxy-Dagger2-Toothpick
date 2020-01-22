@@ -1,2 +1,2 @@
-The example of using Toothpick.
-Using custom Scopes for the Presenter that has lifecycle different from Fragment.
+### The example of using Toothpick.
+The example of using custom Scopes for the Presenter that has lifecycle different from Fragment.
